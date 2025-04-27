@@ -10,8 +10,8 @@ def create_solution_folder(problem_name, difficulty):
     # Convert the problem name into a folder-friendly format (lowercase, hyphen-separated)
     folder_name = problem_name.lower().replace(' ', '-').replace('.', '')
 
-    # Define the base path (assuming you're inside 'leetcode-solutions' already)
-    base_path = os.getcwd()
+    # Define the base path (path to the 'leetcode-solutions' folder)
+    base_path = os.path.abspath(os.path.join(os.getcwd(), '..'))  # Goes one directory up from 'scripts/'
 
     # Create the full path for the new folder inside the chosen difficulty
     difficulty_folder_path = os.path.join(base_path, difficulty)
