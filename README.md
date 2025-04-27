@@ -22,7 +22,7 @@ Example:
 
 | # | Problem | Difficulty | Solution |
 |:-:|:--------|:----------:|:--------:|
-| - | - | - | - |
+| 3392 | Count Subarrays Of Length Three With A Condition | Easy | [Python](easy/3392-count-subarrays-of-length-three-with-a-condition/solution.py) |
 
 
 *(I will keep updating this table as I solve more problems.)*
