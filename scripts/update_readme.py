@@ -1,31 +1,55 @@
 import os
 
-# Define the root directory for the LeetCode solutions
-root_dir = os.getcwd()
+# Path to the main README.md
+README_PATH = "README.md"
 
-# Function to update README.md files
-def update_readme():
-    # Loop through all difficulty folders (easy, medium, hard)
-    for difficulty in ['easy', 'medium', 'hard']:
-        difficulty_folder = os.path.join(root_dir, difficulty)
+# Folders to scan
+difficulty_levels = ["easy", "medium", "hard"]
 
-        # Check if the folder exists
-        if os.path.exists(difficulty_folder):
-            # Loop through each folder (problem solution) inside the difficulty folder
-            for folder_name in os.listdir(difficulty_folder):
-                problem_folder_path = os.path.join(difficulty_folder, folder_name)
-                readme_path = os.path.join(problem_folder_path, 'README.md')
+# Collect solutions
+solutions = []
 
-                # If the README.md file exists, update it
-                if os.path.exists(readme_path):
-                    with open(readme_path, 'a', encoding='utf-8') as readme_file:
-                        readme_file.write("\n\n# Updated at commit time\n")
-                        readme_file.write("Automated update: Added more description or instructions.\n")
-                    print(f"✅ Updated README.md for {folder_name}")
-                else:
-                    print(f"⚠️ README.md not found for {folder_name}")
-        else:
-            print(f"⚠️ Difficulty folder {difficulty} not found")
+for difficulty in difficulty_levels:
+    path = os.path.join(difficulty)
+    if os.path.exists(path):
+        for folder in sorted(os.listdir(path)):
+            folder_path = os.path.join(path, folder)
+            if os.path.isdir(folder_path):
+                # Extract problem number and title
+                parts = folder.split('-')
+                problem_number = parts[0]
+                title = ' '.join(parts[1:]).title()
+                solution_link = f"{difficulty}/{folder}/solution.py"
+                solutions.append((problem_number, title, difficulty.capitalize(), solution_link))
 
-# Call the function to update the README
-update_readme()
+# Sort solutions by problem number
+solutions.sort(key=lambda x: int(x[0]))
+
+# Build the Solutions Table Markdown
+table_header = "| # | Problem | Difficulty | Solution |\n|:-:|:--------|:----------:|:--------:|\n"
+table_rows = ""
+for problem_number, title, difficulty, link in solutions:
+    table_rows += f"| {problem_number} | {title} | {difficulty} | [Python]({link}) |\n"
+
+# Read the current README
+with open(README_PATH, "r", encoding="utf-8") as f:
+    content = f.read()
+
+# Replace the old Solutions Table
+start_marker = "| # | Problem | Difficulty | Solution |"
+end_marker = "*(I will keep updating this table as I solve more problems.)*"
+
+start_idx = content.find(start_marker)
+end_idx = content.find(end_marker)
+
+if start_idx != -1 and end_idx != -1:
+    new_content = content[:start_idx] + table_header + table_rows + "\n\n" + content[end_idx:]
+else:
+    print("Couldn't find the Solutions Table in README.md. Please check the format.")
+    exit()
+
+# Write back the updated README
+with open(README_PATH, "w", encoding="utf-8") as f:
+    f.write(new_content)
+
+print("✅ README.md updated successfully!")
