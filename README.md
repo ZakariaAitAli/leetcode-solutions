@@ -23,6 +23,7 @@ Example:
 | # | Problem | Difficulty | Solution |
 |:-:|:--------|:----------:|:--------:|
 | 2302 | Count Subarrays With Score Less Than K | Hard | [Python](hard/2302-count-subarrays-with-score-less-than-k/solution.py) |
+| 2962 | Count Subarrays Where Max Element Appears At Least K Times | Medium | [Python](medium/2962-count-subarrays-where-max-element-appears-at-least-k-times/solution.py) |
 | 3392 | Count Subarrays Of Length Three With A Condition | Easy | [Python](easy/3392-count-subarrays-of-length-three-with-a-condition/solution.py) |
 
 
