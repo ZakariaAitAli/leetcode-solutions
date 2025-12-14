@@ -1,40 +1,66 @@
 # LeetCode Solutions
 
-Welcome to my LeetCode solutions repository! 🚀  
-I solve problems to sharpen my coding and problem-solving skills.
+A personal repository of LeetCode problem solutions maintained for systematic practice and skill reinforcement.
 
-## Structure
+The goal is correctness, clarity, and consistency — not tutorial-style exposition.
 
-Solutions are organized by **difficulty**:
+---
+
+## Repository Structure
+
+Solutions are organized strictly by difficulty.
+
 ```
+
 leetcode-solutions/
 ├── easy/
 ├── medium/
 ├── hard/
+
 ```
 
-Each file is named after the problem (lowercase, words separated by dashes).
+Each problem is stored in its own directory using the format:
 
-Example:  
-`easy/two-sum.py`
+```
 
-## Solutions Table
+<difficulty>/<problem-id>-<problem-slug>/
+├── README.md
+└── solution.py
+
+```
+
+Naming rules:
+- lowercase
+- hyphen-separated
+- prefixed with the LeetCode problem ID
+
+---
+
+## Solved Problems
 
 | # | Problem | Difficulty | Solution |
-|:-:|:--------|:----------:|:--------:|
-| 2302 | Count Subarrays With Score Less Than K | Hard | [Python](hard/2302-count-subarrays-with-score-less-than-k/solution.py) |
-| 2962 | Count Subarrays Where Max Element Appears At Least K Times | Medium | [Python](medium/2962-count-subarrays-where-max-element-appears-at-least-k-times/solution.py) |
-| 3392 | Count Subarrays Of Length Three With A Condition | Easy | [Python](easy/3392-count-subarrays-of-length-three-with-a-condition/solution.py) |
+|:-:|--------|:----------:|:--------:|
+| 1 | Two Sum | Easy | [Python](easy/1-two-sum/solution.py) |
+| 2302 | Count Subarrays with Score Less Than K | Hard | [Python](hard/2302-count-subarrays-with-score-less-than-k/solution.py) |
+| 2962 | Count Subarrays Where Max Element Appears at Least K Times | Medium | [Python](medium/2962-count-subarrays-where-max-element-appears-at-least-k-times/solution.py) |
+| 3392 | Count Subarrays of Length Three with A Condition | Easy | [Python](easy/3392-count-subarrays-of-length-three-with-a-condition/solution.py) |
 
+The table is updated as new problems are added.
 
-*(I will keep updating this table as I solve more problems.)*
+---
 
-## Languages
+## Language
 
-Mainly solving in **Python** 🐍.  
-(Might add more languages later.)
+- Python (primary)
+
+Additional languages may be added only when they provide meaningful contrast in approach or implementation.
+
+---
 
 ## Notes
 
-- Solutions may not always be the most optimal but I aim for clarity and correctness.
-- Feel free to suggest better approaches!
+- Solutions are submission-ready and deterministic.
+- Readability and reasoning take precedence over micro-optimizations.
+- Not all solutions are guaranteed to be globally optimal, but all are correct and efficient within constraints.
+
+License: MIT

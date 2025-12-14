@@ -1,55 +1,71 @@
 import os
+import re
 
-# Path to the main README.md
 README_PATH = "README.md"
+DIFFICULTIES = ["easy", "medium", "hard"]
 
-# Folders to scan
-difficulty_levels = ["easy", "medium", "hard"]
-
-# Collect solutions
 solutions = []
 
-for difficulty in difficulty_levels:
-    path = os.path.join(difficulty)
-    if os.path.exists(path):
-        for folder in sorted(os.listdir(path)):
-            folder_path = os.path.join(path, folder)
-            if os.path.isdir(folder_path):
-                # Extract problem number and title
-                parts = folder.split('-')
-                problem_number = parts[0]
-                title = ' '.join(parts[1:]).title()
-                solution_link = f"{difficulty}/{folder}/solution.py"
-                solutions.append((problem_number, title, difficulty.capitalize(), solution_link))
+def format_title(slug: str) -> str:
+    words = slug.split("-")
+    lowercase_words = {"of", "with", "and", "to", "in", "for", "at", "by"}
+    title = []
+    for i, w in enumerate(words):
+        if i != 0 and w in lowercase_words:
+            title.append(w)
+        else:
+            title.append(w.capitalize())
+    return " ".join(title)
 
-# Sort solutions by problem number
-solutions.sort(key=lambda x: int(x[0]))
+for difficulty in DIFFICULTIES:
+    if not os.path.isdir(difficulty):
+        continue
 
-# Build the Solutions Table Markdown
-table_header = "| # | Problem | Difficulty | Solution |\n|:-:|:--------|:----------:|:--------:|\n"
-table_rows = ""
-for problem_number, title, difficulty, link in solutions:
-    table_rows += f"| {problem_number} | {title} | {difficulty} | [Python]({link}) |\n"
+    for folder in sorted(os.listdir(difficulty)):
+        folder_path = os.path.join(difficulty, folder)
+        if not os.path.isdir(folder_path):
+            continue
 
-# Read the current README
+        match = re.match(r"^(\d+)-(.+)$", folder)
+        if not match:
+            continue
+
+        problem_number = int(match.group(1))
+        slug = match.group(2)
+
+        title = format_title(slug)
+        solution_link = f"{difficulty}/{folder}/solution.py"
+
+        solutions.append(
+            (problem_number, title, difficulty.capitalize(), solution_link)
+        )
+
+solutions.sort(key=lambda x: x[0])
+
+table = [
+    "| # | Problem | Difficulty | Solution |",
+    "|:-:|--------|:----------:|:--------:|",
+]
+
+for num, title, diff, link in solutions:
+    table.append(f"| {num} | {title} | {diff} | [Python]({link}) |")
+
+table_md = "\n".join(table)
+
 with open(README_PATH, "r", encoding="utf-8") as f:
     content = f.read()
 
-# Replace the old Solutions Table
-start_marker = "| # | Problem | Difficulty | Solution |"
-end_marker = "*(I will keep updating this table as I solve more problems.)*"
+pattern = re.compile(
+    r"\| # \| Problem \| Difficulty \| Solution \|[\s\S]*?\n\n",
+    re.MULTILINE,
+)
 
-start_idx = content.find(start_marker)
-end_idx = content.find(end_marker)
+new_content, count = pattern.subn(table_md + "\n\n", content)
 
-if start_idx != -1 and end_idx != -1:
-    new_content = content[:start_idx] + table_header + table_rows + "\n\n" + content[end_idx:]
-else:
-    print("Couldn't find the Solutions Table in README.md. Please check the format.")
-    exit()
+if count == 0:
+    raise RuntimeError("Solutions table not found or malformed in README.md")
 
-# Write back the updated README
 with open(README_PATH, "w", encoding="utf-8") as f:
     f.write(new_content)
 
-print("✅ README.md updated successfully!")
+print("✅ README.md updated successfully")
