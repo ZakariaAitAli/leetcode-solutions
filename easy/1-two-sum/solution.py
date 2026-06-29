@@ -24,4 +24,4 @@ class Solution:
                 return [seen[complement], i]
             seen[value] = i
 
-        return []  # unreachable: problem guarantees exactly one solution
+        return []  # pragma: no cover — problem guarantees exactly one solution
