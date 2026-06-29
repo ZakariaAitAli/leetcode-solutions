@@ -1,10 +1,13 @@
 import os
 import re
+from pathlib import Path
 
-README_PATH = "README.md"
+REPO_ROOT = Path(__file__).resolve().parent.parent
+README_PATH = REPO_ROOT / "README.md"
 DIFFICULTIES = ["easy", "medium", "hard"]
 
 solutions = []
+
 
 def format_title(slug: str) -> str:
     words = slug.split("-")
@@ -17,13 +20,15 @@ def format_title(slug: str) -> str:
             title.append(w.capitalize())
     return " ".join(title)
 
+
 for difficulty in DIFFICULTIES:
-    if not os.path.isdir(difficulty):
+    difficulty_path = REPO_ROOT / difficulty
+    if not difficulty_path.is_dir():
         continue
 
-    for folder in sorted(os.listdir(difficulty)):
-        folder_path = os.path.join(difficulty, folder)
-        if not os.path.isdir(folder_path):
+    for folder in sorted(os.listdir(difficulty_path)):
+        folder_path = difficulty_path / folder
+        if not folder_path.is_dir():
             continue
 
         match = re.match(r"^(\d+)-(.+)$", folder)
@@ -52,8 +57,7 @@ for num, title, diff, link in solutions:
 
 table_md = "\n".join(table)
 
-with open(README_PATH, "r", encoding="utf-8") as f:
-    content = f.read()
+content = README_PATH.read_text(encoding="utf-8")
 
 pattern = re.compile(
     r"\| # \| Problem \| Difficulty \| Solution \|[\s\S]*?\n\n",
@@ -65,7 +69,6 @@ new_content, count = pattern.subn(table_md + "\n\n", content)
 if count == 0:
     raise RuntimeError("Solutions table not found or malformed in README.md")
 
-with open(README_PATH, "w", encoding="utf-8") as f:
-    f.write(new_content)
+README_PATH.write_text(new_content, encoding="utf-8")
 
-print("✅ README.md updated successfully")
+print("README.md updated successfully")

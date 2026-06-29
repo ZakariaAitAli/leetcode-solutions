@@ -1,82 +1,112 @@
-import os
+#!/usr/bin/env python3
+"""
+Scaffold a new LeetCode problem directory.
 
-# Function to create the folder and files inside the appropriate category
-def create_solution_folder(problem_name, difficulty):
-    # Ensure valid difficulty input
-    if difficulty not in ['easy', 'medium', 'hard']:
-        print("Error: Please specify a valid difficulty ('easy', 'medium', 'hard').")
-        return
+Usage:
+    python scripts/create_solution_folder.py <id> <difficulty> <slug>
 
-    # Convert the problem name into a folder-friendly format (lowercase, hyphen-separated)
-    folder_name = problem_name.lower().replace(' ', '-').replace('.', '')
+Example:
+    python scripts/create_solution_folder.py 42 hard trapping-rain-water
+"""
 
-    # Define the base path (path to the 'leetcode-solutions' folder)
-    base_path = os.path.abspath(os.path.join(os.getcwd(), '..'))  # Goes one directory up from 'scripts/'
+import argparse
+import sys
+from pathlib import Path
 
-    # Create the full path for the new folder inside the chosen difficulty
-    difficulty_folder_path = os.path.join(base_path, difficulty)
-    os.makedirs(difficulty_folder_path, exist_ok=True)
-    
-    # Full path for the solution folder
-    solution_folder_path = os.path.join(difficulty_folder_path, folder_name)
-    
-    # Create the folder
-    os.makedirs(solution_folder_path, exist_ok=True)
+DIFFICULTIES = {"easy", "medium", "hard"}
+REPO_ROOT = Path(__file__).resolve().parent.parent
 
-    # Define paths for the solution and README files
-    solution_file_path = os.path.join(solution_folder_path, 'solution.py')
-    readme_file_path = os.path.join(solution_folder_path, 'README.md')
 
-    # Create the solution.py file with a basic template
-    with open(solution_file_path, 'w', encoding='utf-8') as solution_file:
-        solution_file.write(f"""
-# {problem_name}
-Difficulty: {difficulty.capitalize()}
+def create_solution_folder(problem_id: int, difficulty: str, slug: str) -> None:
+    slug = slug.lower().replace(" ", "-")
+    folder_name = f"{problem_id}-{slug}"
+    folder_path = REPO_ROOT / difficulty / folder_name
 
-class Solution:
-    def solve(self):
-        pass  # Your solution here
-""")
+    if folder_path.exists():
+        sys.exit(f"Error: {folder_path} already exists.")
 
-    # Create the README.md file with a basic template
-    with open(readme_file_path, 'w', encoding='utf-8') as readme_file:
-        readme_file.write(f"""
-# {problem_name}
+    folder_path.mkdir(parents=True)
 
-## Problem
+    title = slug.replace("-", " ").title()
+    test_name = slug.replace("-", "_")
 
-**Problem description goes here.**
+    (folder_path / "solution.py").write_text(
+        f'"""\n'
+        f"{problem_id}. {title}\n"
+        f"Difficulty: {difficulty.capitalize()}\n"
+        f"\n"
+        f"Approach:\n"
+        f"-\n"
+        f"\n"
+        f"Time Complexity: O(?)\n"
+        f"Space Complexity: O(?)\n"
+        f'"""\n'
+        f"\n"
+        f"from typing import List\n"
+        f"\n"
+        f"\n"
+        f"class Solution:\n"
+        f"    pass  # TODO: implement\n",
+        encoding="utf-8",
+    )
 
----
+    (folder_path / f"test_{test_name}.py").write_text(
+        "from solution import Solution\n"
+        "\n"
+        "\n"
+        "def test_example_1():\n"
+        "    pass  # TODO: add test cases\n",
+        encoding="utf-8",
+    )
 
-## Example
+    (folder_path / "README.md").write_text(
+        f"# {problem_id}. {title}\n"
+        f"\n"
+        f"## Problem\n"
+        f"\n"
+        f"**Problem description goes here.**\n"
+        f"\n"
+        f"---\n"
+        f"\n"
+        f"## Approach\n"
+        f"\n"
+        f"-\n"
+        f"\n"
+        f"---\n"
+        f"\n"
+        f"## Complexity\n"
+        f"\n"
+        f"- Time Complexity: `O(?)`\n"
+        f"- Space Complexity: `O(?)`\n"
+        f"\n"
+        f"---\n"
+        f"\n"
+        f"## Solution\n"
+        f"\n"
+        f"[solution.py](./solution.py)\n",
+        encoding="utf-8",
+    )
 
-**Input:**  
-Example input here.
+    print(f"Created: {folder_path}/")
+    print(f"  solution.py, test_{test_name}.py, README.md")
 
-**Output:**  
-Example output here.
 
----
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="Scaffold a new LeetCode problem directory.",
+        epilog="Example: python scripts/create_solution_folder.py 42 hard trapping-rain-water",  # noqa: E501
+    )
+    parser.add_argument("id", type=int, help="LeetCode problem ID")
+    parser.add_argument(
+        "difficulty", choices=sorted(DIFFICULTIES), help="Problem difficulty"
+    )
+    parser.add_argument(
+        "slug", help="Problem slug, hyphen-separated (e.g. trapping-rain-water)"
+    )
 
-## Approach
+    args = parser.parse_args()
+    create_solution_folder(args.id, args.difficulty, args.slug)
 
-- Step 1: Describe your approach.
-- Step 2: Elaborate on your solution steps.
-- Step 3: Mention time and space complexity.
 
----
-
-## Solution
-
-[solution.py](./solution.py)
-""")
-
-    print(f"✅ Folder created: {solution_folder_path}/")
-    print(f"✅ Files created: {solution_file_path} and {readme_file_path}")
-
-# Input: Problem name and difficulty
-problem_name = input("Enter the problem name: ")
-difficulty = input("Enter the difficulty ('easy', 'medium', 'hard'): ").lower()
-
-create_solution_folder(problem_name, difficulty)
+if __name__ == "__main__":
+    main()
