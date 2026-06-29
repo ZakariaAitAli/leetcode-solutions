@@ -60,7 +60,7 @@ table_md = "\n".join(table)
 content = README_PATH.read_text(encoding="utf-8")
 
 pattern = re.compile(
-    r"\| # \| Problem \| Difficulty \| Solution \|[\s\S]*?\n\n",
+    r"(\|[^\n]*#[^\n]*\|[^\n]*\n(?:\|[^\n]*\n)+)\n",
     re.MULTILINE,
 )
 
