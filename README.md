@@ -42,6 +42,7 @@ Naming rules:
 | # | Problem | Difficulty | Solution |
 |:-:|--------|:----------:|:--------:|
 | 1 | Two Sum | Easy | [Python](easy/1-two-sum/solution.py) |
+| 1358 | Number of Substrings Containing All Three Characters | Medium | [Python](medium/1358-number-of-substrings-containing-all-three-characters/solution.py) |
 | 1967 | Number of Strings That Appear As Substrings in Word | Easy | [Python](easy/1967-number-of-strings-that-appear-as-substrings-in-word/solution.py) |
 | 2302 | Count Subarrays with Score Less Than K | Hard | [Python](hard/2302-count-subarrays-with-score-less-than-k/solution.py) |
 | 2962 | Count Subarrays Where Max Element Appears at Least K Times | Medium | [Python](medium/2962-count-subarrays-where-max-element-appears-at-least-k-times/solution.py) |
